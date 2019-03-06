@@ -22,4 +22,8 @@ Author: Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>),
 Maintainer: Kirill Müller <krlmlr+r@mailbox.org>
 Repository: CRAN
 Date/Publication: 2018-03-13 08:21:23 UTC
-Built: R 3.5.0; ; 2018-04-23 04:08:49 UTC; unix
+Built: R 3.4.4; ; 2018-03-14 10:56:21 UTC; unix
+RemoteType: cran
+RemoteSha: 0.1.1
+RemoteRepos: structure("https://cran.rstudio.com/", .Names = "CRAN")
+RemotePkgType: binary

@@ -1,7 +1,7 @@
 {
-  "name": "electron-quick-start",
+  "name": "Aneuvis",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A web tool for analyzing chromosomal number variation in single cells",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -9,17 +9,19 @@
     "package-win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --icon=cc.ico --out=ElectronShinyAppWindows --version-string.CompanyName=ColumbusCollaboratory --version-string.FileDescription=CE --version-string.ProductName=\"Shiny Electron App\"",
     "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/dpique/aneuvis",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "aneuploidy",
+    "single cells",
+    "chromosomes",
+    "genetics"
   ],
-  "author": "GitHub",
+  "author": "Daniel Pique",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^2.0.0"
+  },
+  "dependencies": {
+    "electron-packager": "^13.1.0"
   }
 }

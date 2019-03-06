@@ -69,7 +69,10 @@ function createWindow () {
 
     loading.once('show', () => {
       console.log(new Date().toISOString()+'::show loading')
-      mainWindow = new BrowserWindow({webPreferences:{nodeIntegration:false}, show:false, width: 800, height: 600, title:""})
+      mainWindow = new BrowserWindow({webPreferences:{nodeIntegration:false}, show:false, 
+      //width: 800, height: 600, 
+      fullscreen:true,
+      title:"Aneuvis 1.0", icon:path.join(__dirname, 'assets/icons/png/64x64.png')})
 
       mainWindow.webContents.once('dom-ready', () => {
         console.log(new Date().toISOString()+'::mainWindow loaded')

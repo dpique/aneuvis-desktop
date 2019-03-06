@@ -25,5 +25,9 @@ Author: Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>),
 Maintainer: Kirill Müller <krlmlr+r@mailbox.org>
 Repository: CRAN
 Date/Publication: 2018-03-29 14:09:09 UTC
-Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-04-23 15:45:21 UTC; unix
+Built: R 3.4.4; x86_64-apple-darwin15.6.0; 2018-03-30 07:56:31 UTC; unix
 Archs: bindrcpp.so.dSYM
+RemoteType: cran
+RemoteSha: 0.2.2
+RemoteRepos: structure("https://cran.rstudio.com/", .Names = "CRAN")
+RemotePkgType: binary

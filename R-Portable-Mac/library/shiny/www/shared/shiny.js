@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -13,8 +13,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   var $ = jQuery;
 
   var exports = window.Shiny = window.Shiny || {};
-
-  exports.version = "1.1.0"; // Version number inserted by Grunt
 
   var origPushState = window.history.pushState;
   window.history.pushState = function () {
@@ -186,7 +184,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     .replace(/[\b]/g, '\\b');
 
     try {
-      var func = new Function("with (this) {\n        try {\n          return (" + expr + ");\n        } catch (e) {\n          console.error('Error evaluating expression: " + expr_escaped + "');\n          throw e;\n        }\n      }");
+      var func = new Function('with (this) {\n        try {\n          return (' + expr + ');\n        } catch (e) {\n          console.error(\'Error evaluating expression: ' + expr_escaped + '\');\n          throw e;\n        }\n      }');
     } catch (e) {
       console.error("Error parsing expression: " + expr);
       throw e;
@@ -288,33 +286,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (!_equal(args[i], args[i + 1])) return false;
     }
     return true;
-  };
-
-  // Compare version strings like "1.0.1", "1.4-2". `op` must be a string like
-  // "==" or "<".
-  exports.compareVersion = function (a, op, b) {
-    function versionParts(ver) {
-      return (ver + "").replace(/-/, ".").replace(/(\.0)+[^\.]*$/, "").split(".");
-    }
-
-    function cmpVersion(a, b) {
-      a = versionParts(a);
-      b = versionParts(b);
-      var len = Math.min(a.length, b.length);
-      var cmp;
-
-      for (var i = 0; i < len; i++) {
-        cmp = parseInt(a[i], 10) - parseInt(b[i], 10);
-        if (cmp !== 0) {
-          return cmp;
-        }
-      }
-      return a.length - b.length;
-    }
-
-    var diff = cmpVersion(a, b);
-
-    if (op === "==") return diff === 0;else if (op === ">=") return diff >= 0;else if (op === ">") return diff > 0;else if (op === "<=") return diff <= 0;else if (op === "<") return diff < 0;else throw "Unknown operator: " + op;
   };
 
   // multimethod: Creates functions — "multimethods" — that are polymorphic on one
@@ -490,7 +461,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (defaultMethod) {
         return defaultMethod.apply(invoke, args);
       } else {
-        throw new Error("No method for dispatch value " + dispatchVal);
+        throw new Error('No method for dispatch value ' + dispatchVal);
       }
     });
 
@@ -762,34 +733,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.lastChanceCallback = [];
   };
   (function () {
-    this.setInput = function (name, value, opts) {
+    this.setInput = function (name, value) {
+      var self = this;
+
       this.pendingData[name] = value;
 
-      if (!this.reentrant) {
-        if (opts.priority === "event") {
-          this.$sendNow();
-        } else if (!this.timerId) {
-          this.timerId = setTimeout(this.$sendNow.bind(this), 0);
-        }
-      }
-    };
-
-    this.$sendNow = function () {
-      if (this.reentrant) {
-        console.trace("Unexpected reentrancy in InputBatchSender!");
-      }
-
-      this.reentrant = true;
-      try {
-        this.timerId = null;
-        $.each(this.lastChanceCallback, function (i, callback) {
-          callback();
-        });
-        var currentData = this.pendingData;
-        this.pendingData = {};
-        this.shinyapp.sendInput(currentData);
-      } finally {
-        this.reentrant = false;
+      if (!this.timerId && !this.reentrant) {
+        this.timerId = setTimeout(function () {
+          self.reentrant = true;
+          try {
+            $.each(self.lastChanceCallback, function (i, callback) {
+              callback();
+            });
+            self.timerId = null;
+            var currentData = self.pendingData;
+            self.pendingData = {};
+            self.shinyapp.sendInput(currentData);
+          } finally {
+            self.reentrant = false;
+          }
+        }, 0);
       }
     };
   }).call(InputBatchSender.prototype);
@@ -799,7 +762,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.lastSentValues = this.reset(initialValues);
   };
   (function () {
-    this.setInput = function (name, value, opts) {
+    this.setInput = function (name, value) {
+      // Note that opts is not passed to setInput at this stage of the input
+      // decorator stack. If in the future this setInput keeps track of opts, it
+      // would be best not to store the `el`, because that could prevent it from
+      // being GC'd.
       var _splitInputNameType = splitInputNameType(name);
 
       var inputName = _splitInputNameType.name;
@@ -807,11 +774,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var jsonValue = JSON.stringify(value);
 
-      if (opts.priority !== "event" && this.lastSentValues[inputName] && this.lastSentValues[inputName].jsonValue === jsonValue && this.lastSentValues[inputName].inputType === inputType) {
+      if (this.lastSentValues[inputName] && this.lastSentValues[inputName].jsonValue === jsonValue && this.lastSentValues[inputName].inputType === inputType) {
         return;
       }
       this.lastSentValues[inputName] = { jsonValue: jsonValue, inputType: inputType };
-      this.target.setInput(name, value, opts);
+      this.target.setInput(name, value);
     };
     this.reset = function () {
       var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -854,7 +821,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       evt.value = value;
       evt.binding = opts.binding;
       evt.el = opts.el;
-      evt.priority = opts.priority;
 
       $(document).trigger(evt);
 
@@ -862,9 +828,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name = evt.name;
         if (evt.inputType !== '') name += ':' + evt.inputType;
 
-        // Most opts aren't passed along to lower levels in the input decorator
+        // opts aren't passed along to lower levels in the input decorator
         // stack.
-        this.target.setInput(name, evt.value, { priority: opts.priority });
+        this.target.setInput(name, evt.value);
       }
     };
   }).call(InputEventDecorator.prototype);
@@ -877,7 +843,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.setInput = function (name, value, opts) {
       this.$ensureInit(name);
 
-      if (opts.priority !== "deferred") this.inputRatePolicies[name].immediateCall(name, value, opts);else this.inputRatePolicies[name].normalCall(name, value, opts);
+      if (opts.immediate) this.inputRatePolicies[name].immediateCall(name, value, opts);else this.inputRatePolicies[name].normalCall(name, value, opts);
     };
     this.setRatePolicy = function (name, mode, millis) {
       if (mode === 'direct') {
@@ -929,25 +895,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   // Merge opts with defaults, and return a new object.
   function addDefaultInputOpts(opts) {
-
-    opts = $.extend({
-      priority: "immediate",
+    return $.extend({
+      immediate: false,
       binding: null,
       el: null
     }, opts);
-
-    if (opts && typeof opts.priority !== "undefined") {
-      switch (opts.priority) {
-        case "deferred":
-        case "immediate":
-        case "event":
-          break;
-        default:
-          throw new Error("Unexpected input value mode: '" + opts.priority + "'");
-      }
-    }
-
-    return opts;
   }
 
   function splitInputNameType(name) {
@@ -1284,22 +1236,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
 
     this.receiveOutput = function (name, value) {
+      if (this.$values[name] === value) return undefined;
+
+      this.$values[name] = value;
+      delete this.$errors[name];
+
       var binding = this.$bindings[name];
       var evt = jQuery.Event('shiny:value');
       evt.name = name;
       evt.value = value;
       evt.binding = binding;
-
-      if (this.$values[name] === value) {
-        $(binding ? binding.el : document).trigger(evt);
-        return undefined;
-      }
-
-      this.$values[name] = value;
-      delete this.$errors[name];
-
       $(binding ? binding.el : document).trigger(evt);
-
       if (!evt.isDefaultPrevented() && binding) {
         binding.onValueChange(evt.value);
       }
@@ -1995,7 +1942,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           // Progress bar starts hidden; will be made visible if a value is provided
           // during updates.
           exports.notifications.show({
-            html: "<div id=\"shiny-progress-" + message.id + "\" class=\"shiny-progress-notification\">" + '<div class="progress progress-striped active" style="display: none;"><div class="progress-bar"></div></div>' + '<div class="progress-text">' + '<span class="progress-message">message</span> ' + '<span class="progress-detail"></span>' + '</div>' + '</div>',
+            html: '<div id="shiny-progress-' + message.id + '" class="shiny-progress-notification">' + '<div class="progress progress-striped active" style="display: none;"><div class="progress-bar"></div></div>' + '<div class="progress-text">' + '<span class="progress-message">message</span> ' + '<span class="progress-detail"></span>' + '</div>' + '</div>',
             id: message.id,
             duration: null
           });
@@ -2191,7 +2138,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if ($notification.length === 0) $notification = _create(id);
 
       // Render html and dependencies
-      var newHtml = "<div class=\"shiny-notification-content-text\">" + html + "</div>" + ("<div class=\"shiny-notification-content-action\">" + action + "</div>");
+      var newHtml = '<div class="shiny-notification-content-text">' + html + '</div>' + ('<div class="shiny-notification-content-action">' + action + '</div>');
       var $content = $notification.find('.shiny-notification-content');
       exports.renderContent($content, { html: newHtml, deps: deps });
 
@@ -2271,7 +2218,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var $notification = _get(id);
 
       if ($notification.length === 0) {
-        $notification = $("<div id=\"shiny-notification-" + id + "\" class=\"shiny-notification\">" + '<div class="shiny-notification-close">&times;</div>' + '<div class="shiny-notification-content"></div>' + '</div>');
+        $notification = $('<div id="shiny-notification-' + id + '" class="shiny-notification">' + '<div class="shiny-notification-close">&times;</div>' + '<div class="shiny-notification-content"></div>' + '</div>');
 
         $notification.find('.shiny-notification-close').on('click', function (e) {
           e.preventDefault();
@@ -2987,7 +2934,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return function (e) {
         if (e === null) {
-          exports.setInputValue(inputId, null);
+          exports.onInputChange(inputId, null);
           return;
         }
 
@@ -2995,7 +2942,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         // If outside of plotting region
         if (!coordmap.isInPanel(offset)) {
           if (nullOutside) {
-            exports.setInputValue(inputId, null);
+            exports.onInputChange(inputId, null);
             return;
           }
           if (clip) return;
@@ -3016,7 +2963,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         coords.range = panel.range;
         coords.log = panel.log;
 
-        exports.setInputValue(inputId, coords, { priority: "event" });
+        coords[".nonce"] = Math.random();
+        exports.onInputChange(inputId, coords);
       };
     };
   };
@@ -3203,7 +3151,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       // We're in a new or reset state
       if (isNaN(coords.xmin)) {
-        exports.setInputValue(inputId, null);
+        exports.onInputChange(inputId, null);
         // Must tell other brushes to clear.
         imageOutputBinding.find(document).trigger("shiny-internal:brushed", {
           brushId: inputId, outputId: null
@@ -3230,7 +3178,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       coords.outputId = outputId;
 
       // Send data to server
-      exports.setInputValue(inputId, coords);
+      exports.onInputChange(inputId, coords);
 
       $el.data("mostRecentBrush", true);
       imageOutputBinding.find(document).trigger("shiny-internal:brushed", coords);
@@ -3864,7 +3812,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   };
 
   exports.resetBrush = function (brushId) {
-    exports.setInputValue(brushId, null);
+    exports.onInputChange(brushId, null);
     imageOutputBinding.find(document).trigger("shiny-internal:brushed", {
       brushId: brushId, outputId: null
     });
@@ -3912,7 +3860,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       html = '';
     } else if (typeof content === 'string') {
       html = content;
-    } else if ((typeof content === "undefined" ? "undefined" : _typeof(content)) === 'object') {
+    } else if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
       html = content.html;
       dependencies = content.deps || [];
     }
@@ -4568,15 +4516,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         opts.prettify = function (num) {
           return timeFormatter(timeFormat, new Date(num));
         };
-      } else {
-        // The default prettify function for ion.rangeSlider adds thousands
-        // separators after the decimal mark, so we have our own version here.
-        // (#1958)
-        opts.prettify = function (num) {
-          // When executed, `this` will refer to the `IonRangeSlider.options`
-          // object.
-          return formatNumber(num, this.prettify_separator);
-        };
       }
 
       $el.ionRangeSlider(opts);
@@ -4588,24 +4527,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   });
   inputBindings.register(sliderInputBinding, 'shiny.sliderInput');
-
-  // Format numbers for nicer output.
-  // formatNumber(1234567.12345)           === "1,234,567.12345"
-  // formatNumber(1234567.12345, ".", ",") === "1.234.567,12345"
-  // formatNumber(1000, " ")               === "1 000"
-  // formatNumber(20)                      === "20"
-  // formatNumber(1.2345e24)               === "1.2345e+24"
-  function formatNumber(num) {
-    var thousand_sep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ",";
-    var decimal_sep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ".";
-
-    var parts = num.toString().split(".");
-
-    // Add separators to portion before decimal mark.
-    parts[0] = parts[0].replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + thousand_sep);
-
-    if (parts.length === 1) return parts[0];else if (parts.length === 2) return parts[0] + decimal_sep + parts[1];else return "";
-  };
 
   $(document).on('click', '.slider-animate-button', function (evt) {
     evt.preventDefault();
@@ -5795,7 +5716,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       // Attach a dragenter handler to $el and all of its children. When the first
       // child is entered, trigger a draghoverstart event.
       $el.on("dragenter.dragHover", function (e) {
-        if (collection.length === 0) {
+        if (collection.size() === 0) {
           $el.trigger("draghoverstart" + ns, e.originalEvent);
         }
         // Every child that has fired dragenter is added to the collection.
@@ -5810,7 +5731,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         collection = collection.not(e.originalEvent.target);
         // When the collection has no elements, all of the children have been
         // removed, and produce draghoverend event.
-        if (collection.length === 0) {
+        if (collection.size() === 0) {
           $el.trigger("draghoverend" + ns, e.originalEvent);
         }
       });
@@ -6090,7 +6011,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     inputs = new InputValidateDecorator(inputs);
 
-    exports.setInputValue = exports.onInputChange = function (name, value, opts) {
+    exports.onInputChange = function (name, value, opts) {
       opts = addDefaultInputOpts(opts);
       inputs.setInput(name, value, opts);
     };
@@ -6104,11 +6025,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var type = binding.getType(el);
         if (type) id = id + ":" + type;
 
-        var opts = {
-          priority: allowDeferred ? "deferred" : "immediate",
-          binding: binding,
-          el: el
-        };
+        var opts = { immediate: !allowDeferred, binding: binding, el: el };
         inputs.setInput(id, value, opts);
       }
     }
@@ -6271,7 +6188,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     // The server needs to know the size of each image and plot output element,
     // in case it is auto-sizing
-    $('.shiny-image-output, .shiny-plot-output, .shiny-report-size').each(function () {
+    $('.shiny-image-output, .shiny-plot-output').each(function () {
       var id = getIdFromEl(this);
       if (this.offsetWidth !== 0 || this.offsetHeight !== 0) {
         initialValues['.clientdata_output_' + id + '_width'] = this.offsetWidth;
@@ -6279,7 +6196,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     });
     function doSendImageSize() {
-      $('.shiny-image-output, .shiny-plot-output, .shiny-report-size').each(function () {
+      $('.shiny-image-output, .shiny-plot-output').each(function () {
         var id = getIdFromEl(this);
         if (this.offsetWidth !== 0 || this.offsetHeight !== 0) {
           inputs.setInput('.clientdata_output_' + id + '_width', this.offsetWidth);

@@ -19,5 +19,5 @@ NeedsCompilation: yes
 Packaged: 2017-04-27 00:04:32 UTC; jcheng
 Repository: CRAN
 Date/Publication: 2017-04-28 07:41:46 UTC
-Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-04-23 15:44:14 UTC; unix
+Built: R 3.4.0; x86_64-apple-darwin15.6.0; 2017-04-29 03:24:16 UTC; unix
 Archs: htmltools.so.dSYM

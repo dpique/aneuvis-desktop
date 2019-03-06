@@ -115,8 +115,7 @@ sd_section("Rendering functions",
     "reactivePrint",
     "reactiveTable",
     "reactiveText",
-    "reactiveUI",
-    "createRenderFunction"
+    "reactiveUI"
   )
 )
 sd_section("Reactive programming",

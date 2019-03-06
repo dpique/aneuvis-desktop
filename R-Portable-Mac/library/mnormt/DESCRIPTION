@@ -16,5 +16,5 @@ NeedsCompilation: yes
 Packaged: 2016-10-14 12:26:21 UTC; aa
 Repository: CRAN
 Date/Publication: 2016-10-15 13:08:50
-Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-04-23 04:08:53 UTC; unix
+Built: R 3.4.0; x86_64-apple-darwin15.6.0; 2017-04-21 23:02:00 UTC; unix
 Archs: mnormt.so.dSYM

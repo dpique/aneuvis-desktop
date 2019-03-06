@@ -35,5 +35,5 @@ Author: Hadley Wickham [aut],
 Maintainer: Jim Hester <james.hester@rstudio.com>
 Repository: CRAN
 Date/Publication: 2017-05-16 19:03:57 UTC
-Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-04-24 09:37:08 UTC; unix
+Built: R 3.4.0; x86_64-apple-darwin15.6.0; 2017-05-17 03:46:57 UTC; unix
 Archs: readr.so.dSYM

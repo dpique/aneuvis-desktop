@@ -1,0 +1,29 @@
+Package: snakecase
+Version: 0.8.3.1
+Date: 2018-02-07
+Title: Convert Strings into any Case
+Description: A consistent, flexible and easy to use tool to parse and convert strings into cases like snake or camel among others.
+Authors@R: c(
+    person("Malte", "Grosser", , "malte.grosser@gmail.com", role = c("aut", "cre")))
+Maintainer: Malte Grosser <malte.grosser@gmail.com>
+Depends: R (>= 3.1)
+Imports: stringr, stringi
+Suggests: testthat, covr, tibble, purrrlyr, knitr, rmarkdown
+URL: https://github.com/Tazinho/snakecase
+BugReports: https://github.com/Tazinho/snakecase/issues
+Encoding: UTF-8
+License: GPL-3
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
+Author: Malte Grosser [aut, cre]
+Built: R 3.4.3; ; 2018-02-20 23:35:48 UTC; unix
+RemoteType: github
+RemoteHost: https://api.github.com
+RemoteRepo: snakecase
+RemoteUsername: tazinho
+RemoteRef: master
+RemoteSha: 5bcc2e17762cac1a32a9f9f307a4b97e71d13d83
+GithubRepo: snakecase
+GithubUsername: tazinho
+GithubRef: master
+GithubSHA1: 5bcc2e17762cac1a32a9f9f307a4b97e71d13d83

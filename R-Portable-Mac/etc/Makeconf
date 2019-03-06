@@ -10,7 +10,7 @@
 include $(R_SHARE_DIR)/make/vars.mk
 
 AR = ar
-BLAS_LIBS = -L"$(R_HOME)/lib$(R_ARCH)" -lRblas
+BLAS_LIBS = -L$(R_HOME)/lib$(R_ARCH) -lRblas
 C_VISIBILITY = 
 CC = clang
 CFLAGS = -Wall -g -O2 $(LTO)
@@ -23,7 +23,7 @@ CXXPICFLAGS = -fPIC
 CXX98 = clang++
 CXX98FLAGS = -Wall -g -O2
 CXX98PICFLAGS = -fPIC
-CXX98STD = -std=gnu++98
+CXX98STD = 
 CXX11 = clang++
 CXX11FLAGS = -Wall -g -O2
 CXX11PICFLAGS = -fPIC
@@ -35,7 +35,7 @@ CXX14STD = -std=gnu++14
 CXX17 = clang++
 CXX17FLAGS = -Wall -g -O2
 CXX17PICFLAGS = -fPIC
-CXX17STD = -std=gnu++17
+CXX17STD = -std=gnu++1z
 DYLIB_EXT = .dylib
 DYLIB_LD = $(CC)
 DYLIB_LDFLAGS = -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -fopenmp# $(CFLAGS) $(CPICFLAGS)
@@ -63,15 +63,15 @@ JAVAC = /usr/bin/javac
 JAVAH = /usr/bin/javah
 ## JAVA_HOME might be used in the next three.  
 ## They are for packages 'JavaGD' and 'rJava'
-JAVA_HOME = /Library/Java/JavaVirtualMachines/jdk-9.jdk/Contents/Home
-JAVA_CPPFLAGS = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/darwin
+JAVA_HOME = /Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/jre
+JAVA_CPPFLAGS = -I$(JAVA_HOME)/../include -I$(JAVA_HOME)/../include/darwin
 JAVA_LIBS = -L$(JAVA_HOME)/lib/server -ljvm
 JAVA_LD_LIBRARY_PATH = $(JAVA_HOME)/lib/server
-LAPACK_LIBS = -L"$(R_HOME)/lib$(R_ARCH)" -lRlapack
+LAPACK_LIBS = -L$(R_HOME)/lib$(R_ARCH) -lRlapack
 ## we only need this is if it is external, as otherwise link to R
 LIBINTL=   -Wl,-framework -Wl,CoreFoundation
 LIBM = 
-LIBR0 = -L"$(R_HOME)/lib$(R_ARCH)"
+LIBR0 = -L$(R_HOME)/lib$(R_ARCH)
 LIBR1 = -lR
 LIBR = -F/Library/Frameworks/R.framework/.. -framework R
 LIBS =  -lpcre -llzma -lbz2 -lz -licucore -lm -liconv
@@ -84,14 +84,14 @@ LTO =
 MAIN_LD = $(CC)
 MAIN_LDFLAGS = -fopenmp
 MAIN_LINK = $(MAIN_LD) $(MAIN_LDFLAGS) $(LDFLAGS)
-MKINSTALLDIRS = "$(R_HOME)/bin/mkinstalldirs"
+MKINSTALLDIRS = $(R_HOME)/bin/mkinstalldirs
 OBJC = clang
 OBJCFLAGS = -Wall -g -O2 -fobjc-exceptions $(LTO)
 OBJC_LIBS = -lobjc 
 OBJCXX = clang++
 R_ARCH = 
 RANLIB = ranlib
-SAFE_FFLAGS = -g -O2 -msse2 -mfpmath=sse
+SAFE_FFLAGS = -g -O2 -ffloat-store
 SED = /usr/bin/sed
 SHELL = /bin/sh
 SHLIB_CFLAGS = 
@@ -139,7 +139,7 @@ SHLIB_CXX1XLDFLAGS = -dynamiclib -Wl,-headerpad_max_install_names -undefined dyn
 STATIC_LIBR = #  "$(R_HOME)/lib$(R_ARCH)/libR.a"  $(BLAS_LIBS) $(FLIBS)  $(LIBINTL) -lreadline  $(LIBS)
 
 R_XTRA_CFLAGS = 
-R_XTRA_CPPFLAGS =  -I"$(R_INCLUDE_DIR)" -DNDEBUG
+R_XTRA_CPPFLAGS =  -I$(R_INCLUDE_DIR) -DNDEBUG
 R_XTRA_CXXFLAGS = 
 R_XTRA_FFLAGS = 
 

@@ -66,5 +66,9 @@ Author: Vitalie Spinu [aut, cre],
   Chel Hee Lee [ctb]
 Repository: CRAN
 Date/Publication: 2018-04-11 10:08:43 UTC
-Built: R 3.5.0; x86_64-apple-darwin15.6.0; 2018-04-23 15:53:53 UTC; unix
+Built: R 3.4.4; x86_64-apple-darwin15.6.0; 2018-04-12 04:22:34 UTC; unix
 Archs: lubridate.so.dSYM
+RemoteType: cran
+RemoteSha: 1.7.4
+RemoteRepos: structure("https://cran.rstudio.com/", .Names = "CRAN")
+RemotePkgType: binary
