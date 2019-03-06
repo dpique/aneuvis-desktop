@@ -7,7 +7,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/ColumbusCollaboratory/electron-quick-start
+git clone https://github.com/dpique/aneuvis-desktop
 # Install Electron Packager (if first time)
 npm install electron-packager -g 
 # Go into the repository
@@ -17,7 +17,7 @@ npm install
 # Run the app
 npm start
 # Build the Executable/App
-cd electron-quick-start
+cd aneuvis-desktop
 npm run package-mac 
 ```
 
